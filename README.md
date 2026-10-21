@@ -95,6 +95,10 @@ python scripts/setup_assets.py --flashlab ../FlashLab-Win --dockscope ../_analys
 - **协作式暂停/停止**：工作单元之间检查点，长任务可暂停续跑；
 - **资产与代码分离**：代码入库，大体积权重/二进制由脚本本地收编。
 
-## 许可注意
+## 许可证
 
-复用的模型均为开源研究项目：FlashDiff、DiffPROTACs（**仅限研究用途**）、PLANET、Uni-Mol、p2rank、AutoDock Vina（Apache-2.0）、Smina（GPL-2.0）、Vina-GPU（GPL-3.0）。分发时请完整保留各自 LICENSE 与引用信息。
+本项目代码以 [MIT](LICENSE) 许可证发布。
+
+## 第三方许可注意
+
+`assets/` 中收编的模型与工具（不入库）均为开源研究项目：FlashDiff、DiffPROTACs（**仅限研究用途**）、PLANET、Uni-Mol、p2rank、AutoDock Vina（Apache-2.0）、Smina（GPL-2.0）、Vina-GPU（GPL-3.0）。分发时请完整保留各自 LICENSE 与引用信息。
