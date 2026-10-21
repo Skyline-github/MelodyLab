@@ -1,0 +1,10 @@
+id,smiles,name
+Gefitinib,COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4,Gefitinib
+Erlotinib,COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC,Erlotinib
+Imatinib,CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5,Imatinib
+Lapatinib,CS(=O)(=O)CCNCC1=CC=C(O1)C2=CC3=C(C=C2)N=CN=C3NC4=CC(=C(C=C4)OCC5=CC(=CC=C5)F)Cl,Lapatinib
+Osimertinib,CN1C=C(C2=CC=CC=C21)C3=NC(=NC=C3)NC4=C(C=C(C(=C4)NC(=O)C=C)N(C)CCN(C)C)OC,Osimertinib
+Sorafenib,CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F,Sorafenib
+Aspirin,CC(=O)OC1=CC=CC=C1C(=O)O,Aspirin
+Caffeine,CN1C=NC2=C1C(=O)N(C(=O)N2C)C,Caffeine
+Ibuprofen,CC(C)CC1=CC=C(C=C1)C(C)C(=O)O,Ibuprofen

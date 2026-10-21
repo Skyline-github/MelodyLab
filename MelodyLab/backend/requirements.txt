@@ -1,0 +1,9 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+pydantic>=2.7
+rdkit>=2024.3
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+pyyaml>=6.0

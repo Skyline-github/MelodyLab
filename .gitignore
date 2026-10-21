@@ -1,0 +1,28 @@
+# ---- 任务数据（本地运行产物，禁止入库）----
+MelodyLabData/
+
+# ---- 第三方大体积资产（1.6 GB，许可证各自独立）----
+# 用 scripts/setup_assets.py 从本地 FlashLab/DockScope 发行目录重建，
+# GROMACS  Windows 版获取方式见 docs/交接文档.md
+MelodyLab/assets/
+
+# ---- 内部开发文档（按用户要求不入库）----
+MelodyLab/docs/
+
+# ---- 本机配置 ----
+MelodyLab/data_root.txt
+
+# ---- 前端依赖（npm install 重建；dist 保留以便免构建运行）----
+MelodyLab/frontend/node_modules/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# ---- 临时文件 ----
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
