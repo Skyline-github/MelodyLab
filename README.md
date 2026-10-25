@@ -1,6 +1,6 @@
 # MelodyLab
 
-**开源 AI 药物发现工作台** —— 一站式覆盖小分子药物研发全流程：**分子筛选 → 批量对接 → 3D 分子生成 → Linker 设计 → 分子动力学验证**，并内置知识库检索、PPI 网络分析、GEO 差异分析与逆合成规划。
+**开源 AI 药物发现工作台** —— 一站式覆盖小分子药物研发全流程：**靶点立项评估（选靶）→ 分子筛选 → 批量对接 → 3D 分子生成 → Linker 设计 → 分子动力学验证**，并内置知识库检索、PPI 网络分析、GEO 差异分析与逆合成规划。
 
 - **本地运行，数据不出机器**：全部计算在工作站本地完成，适合保密性课题；
 - **GPU 加速**：Vina-GPU 批量对接 + GROMACS CUDA 动力学模拟；
@@ -13,6 +13,7 @@
 
 | 模块 | 说明 | 状态 |
 |---|---|---|
+| 靶点立项评估 | 立项五问（AstraZeneca 5R）：Open Targets / GWAS Catalog / Human Protein Atlas / UniProt / ChEMBL / ClinicalTrials.gov / openFDA 等 9 大公开数据库自动取证据，红/黄/绿风险信号 + 五问雷达图，报告导出 JSON/Markdown/Excel，阈值可在 `rules.yaml` 自调 | ✅ 新 |
 | 分子准入筛选 | RDKit 标准化、Ro5/QED/SA、PAINS/BRENK 警报、多样性选择 | ✅ |
 | 批量分子对接 | 多蛋白×多配体、口袋检测、Vina-GPU/Vina/Smina 自动回退、断点续跑 | ✅ |
 | 3D 分子生成 | FlashDiff 扩散模型口袋内从头生成（复用权重） | ✅ 需资产 |
@@ -31,9 +32,9 @@
 ├── MelodyLab/                # 项目主体
 │   ├── backend/melodylab/    #   FastAPI 后端
 │   │   ├── core/jobs.py      #     任务中心（job.json 断点恢复）
-│   │   ├── engines/          #     引擎插件层（screening/docking/generation/linker/affinity/md/knowledge/ppi/geo/retro）
+│   │   ├── engines/          #     引擎插件层（triage/screening/docking/generation/linker/affinity/md/knowledge/ppi/geo/retro）
 │   │   └── routers/          #     API 路由
-│   ├── frontend/             #   Vue3 + Vite 前端（dist 已构建，克隆即用）
+│   ├── frontend/             #   Vue3 + Vite 前端（npm run build 后 dist 由后端托管）
 │   ├── assets/               #   引擎二进制与模型权重（setup_assets.py 本地收编，不入库）
 │   ├── scripts/              #   setup_assets.py 资产收编 / doctor.py 环境自检
 │   └── build/                #   PyInstaller/Electron 打包方案
@@ -59,11 +60,11 @@ python run.py --port 8300
 cd MelodyLab/frontend
 npm install && npm run dev     # http://localhost:5173
 
-# 3. 生产构建（后端直接托管前端；仓库内已带 dist，可跳过）
+# 3. 生产构建（后端直接托管前端 dist）
 cd MelodyLab/frontend && npm run build
 ```
 
-启动后访问 **http://127.0.0.1:8300** 即是完整应用。上传 `example_data/` 里的蛋白与分子即可体验 筛选 → 对接 → MD 全流程。
+启动后访问 **http://127.0.0.1:8300** 即是完整应用。在「靶点立项评估」输入基因符号（如 EGFR）即可做立项五问筛查；上传 `example_data/` 里的蛋白与分子即可体验 筛选 → 对接 → MD 全流程。
 
 ## 资产准备（对接引擎与模型权重）
 
