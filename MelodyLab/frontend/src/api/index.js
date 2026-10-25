@@ -74,6 +74,24 @@ export const api = {
   triageReports: () => request('/api/triage/reports'),
   triageReport: (id) => request(`/api/triage/reports/${id}`),
 
+  // 降解剂评估
+  degraderAvailability: () => request('/api/degrader/availability'),
+  degraderExample: () => request('/api/degrader/example'),
+  degraderRank: (form) => request('/api/degrader/rank', { method: 'POST', body: form }),
+  degraderRetrain: () => request('/api/degrader/retrain', { method: 'POST' }),
+  degraderJob: (id) => request(`/api/degrader/jobs/${id}`),
+  degraderResume: (id) => request(`/api/degrader/jobs/${id}/resume`, { method: 'POST' }),
+  degraderReports: () => request('/api/degrader/reports'),
+  degraderReport: (id) => request(`/api/degrader/reports/${id}`),
+
+  // 三元复合物预测
+  ternaryAvailability: () => request('/api/ternary/availability'),
+  ternaryPredict: (form) => request('/api/ternary/predict', { method: 'POST', body: form }),
+  ternaryJob: (id) => request(`/api/ternary/jobs/${id}`),
+  ternaryResume: (id) => request(`/api/ternary/jobs/${id}/resume`, { method: 'POST' }),
+  ternaryReports: () => request('/api/ternary/reports'),
+  ternaryReport: (id) => request(`/api/ternary/reports/${id}`),
+
   // 设置
   getSettings: () => request('/api/settings'),
   setDataRoot: (payload) => request('/api/settings/data-root', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }),

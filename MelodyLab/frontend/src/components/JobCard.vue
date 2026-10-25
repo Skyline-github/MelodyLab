@@ -22,7 +22,7 @@ async function act(fn) {
       <span class="muted" style="font-size:12.5px">{{ job.created_at }}</span>
       <span style="flex:1"></span>
       <button v-if="running" class="btn ghost sm" @click="act(() => api.pauseJob(job.id))">暂停</button>
-      <button v-if="job.status === 'paused'" class="btn sm" @click="act(() => job.kind === 'triage' ? api.triageResume(job.id) : api.resumeRun(job.id))">恢复</button>
+      <button v-if="job.status === 'paused'" class="btn sm" @click="act(() => job.kind === 'triage' ? api.triageResume(job.id) : job.kind === 'degrader' ? api.degraderResume(job.id) : api.resumeRun(job.id))">恢复</button>
       <button v-if="running || job.status === 'paused'" class="btn danger sm" @click="act(() => api.stopJob(job.id))">停止</button>
       <button class="btn danger sm" @click="act(() => api.deleteJob(job.id))">删除</button>
     </div>

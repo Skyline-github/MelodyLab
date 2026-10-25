@@ -18,6 +18,8 @@ from .routers import jobs, system, workloads
 from .routers import md as md_router
 from .routers import phase2
 from .routers import triage as triage_router
+from .routers import degrader as degrader_router
+from .routers import ternary as ternary_router
 
 
 def create_app() -> FastAPI:
@@ -36,6 +38,8 @@ def create_app() -> FastAPI:
     app.include_router(md_router.router)
     app.include_router(phase2.router)
     app.include_router(triage_router.router)
+    app.include_router(degrader_router.router)
+    app.include_router(ternary_router.router)
 
     dist = frontend_dist()
     if dist:

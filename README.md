@@ -1,6 +1,6 @@
 # MelodyLab
 
-**开源 AI 药物发现工作台** —— 一站式覆盖小分子药物研发全流程：**靶点立项评估（选靶）→ 分子筛选 → 批量对接 → 3D 分子生成 → Linker 设计 → 分子动力学验证**，并内置知识库检索、PPI 网络分析、GEO 差异分析与逆合成规划。
+**开源 AI 药物发现工作台** —— 一站式覆盖小分子药物研发全流程：**靶点立项评估（选靶）→ 分子筛选 → 批量对接 → 3D 分子生成 → Linker 设计 → 降解剂评估 → 三元复合物预测 → 分子动力学验证**，并内置知识库检索、PPI 网络分析、GEO 差异分析与逆合成规划。
 
 - **本地运行，数据不出机器**：全部计算在工作站本地完成，适合保密性课题；
 - **GPU 加速**：Vina-GPU 批量对接 + GROMACS CUDA 动力学模拟；
@@ -18,6 +18,8 @@
 | 批量分子对接 | 多蛋白×多配体、口袋检测、Vina-GPU/Vina/Smina 自动回退、断点续跑 | ✅ |
 | 3D 分子生成 | FlashDiff 扩散模型口袋内从头生成（复用权重） | ✅ 需资产 |
 | Linker 生成 | DiffPROTACs PROTAC 连接子设计（复用权重） | ✅ 需资产 |
+| 降解剂评估 | PROTAC-DB 训练的 MLP 集成 / ExtraTrees / HistGB 三族共识 DC50 排序 + conformal 90% 区间 + 适用域检查（排序参考工具，非绝对值预测） | ✅ 新 |
+| 三元复合物预测 | DeepTernary：参照晶体装配（Galectin-3C × CRBN/VHL）→ 三元复合物预测 → BSA/clash 结构健康，3Dmol 交互查看 | ✅ 需资产 |
 | 亲和力预测 | PLANET pKd（挂接对接流水线） | 🟡 适配器就绪 |
 | MD 模拟 | 内置 GROMACS（GPU）、OpenFF 柔性配体、NVT 预检门控、RMSD/RMSF/Rg 分析、3Dmol 轨迹动画 | ✅ 0.2.0 |
 | 知识库检索 | ChEMBL/PubChem/RCSB/AlphaFold/ZINC/GEO | ✅ 0.2.0 |
@@ -78,6 +80,10 @@ python scripts/setup_assets.py --flashlab ../FlashLab-Win --dockscope ../_analys
 - `assets/tools/`：vina（必需）、smina / Vina-GPU-CUDA（可选）
   - 若无本地来源：从 [AutoDock Vina releases](https://github.com/ccsb-scripps/AutoDock-Vina/releases) 下载 `vina_1.2.7_win.exe` 放入 `assets/tools/`
 - `assets/vendor/`：FlashDiff / DiffPROTACs / PLANET / Uni-Mol / p2rank（生成与亲和力功能需要）
+  - 三元复合物预测：`assets/vendor/DeepTernary/`（代码 + `output/checkpoints/PROTAC/` 权重，[DeepTernary v1.0.1](https://github.com/youqingxiaozhua/DeepTernary/releases)，仅限研究用途），并需独立 conda 环境
+    `deepternary`（dgl 与主环境 torch 不兼容，必须隔离）：`conda create -n deepternary python=3.10 -y`，
+    `pip install torch==2.2.1 "dgl==2.2.1" "numpy==1.26.4" "torchdata==0.7.1" "mmengine==0.10.3" "mmcv-lite==2.2.0" "rdkit==2023.9.3" biopandas "biopython==1.84" POT importlib_metadata prettytable`
+    （注意 torchdata 必须 0.7.1、numpy 必须 1.x；环境路径写入 `数据根/deepternary_python.txt` 或设 `MELODYLAB_DEEPTERNARY_PYTHON`）
 - MD 模拟：GROMACS 2020.6 Windows 版收编于 `assets/tools/gromacs/`；柔性配体参数化需要独立 conda 环境
   `mdff`（openff-toolkit 0.19 + torch≥2.6，与生产环境隔离）：`conda create -n mdff python=3.11 -y && conda run -n mdff pip install openff-toolkit torch rdkit`
 - 未就绪的功能会在首页与对应页面给出明确提示，不影响其他模块使用。

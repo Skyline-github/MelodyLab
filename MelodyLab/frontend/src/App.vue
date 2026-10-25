@@ -25,6 +25,8 @@ onMounted(async () => { try { env.value = await api.environment() } catch (_) {}
       <router-link class="nav-item" to="/docking">🎯 批量分子对接</router-link>
       <router-link class="nav-item" to="/generation">✨ 3D 分子生成</router-link>
       <router-link class="nav-item" to="/linker">🔗 Linker 生成</router-link>
+      <router-link class="nav-item" to="/degrader">🧬 降解剂评估</router-link>
+      <router-link class="nav-item" to="/ternary">🔬 三元复合物预测</router-link>
       <div class="nav-sep" style="margin:10px 0; border-top:1px solid rgba(128,140,170,0.25)"></div>
       <router-link class="nav-item" to="/md">🌀 分子动力学</router-link>
       <router-link class="nav-item" to="/knowledge">🗄 数据库发现</router-link>

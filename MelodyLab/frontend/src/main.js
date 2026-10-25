@@ -7,6 +7,8 @@ import ScreeningView from './views/ScreeningView.vue'
 import DockingView from './views/DockingView.vue'
 import GenerationView from './views/GenerationView.vue'
 import LinkerView from './views/LinkerView.vue'
+import DegraderView from './views/DegraderView.vue'
+import TernaryView from './views/TernaryView.vue'
 import MdView from './views/MdView.vue'
 import KnowledgeView from './views/KnowledgeView.vue'
 import PpiView from './views/PpiView.vue'
@@ -25,6 +27,8 @@ const router = createRouter({
     { path: '/docking', name: 'docking', component: DockingView },
     { path: '/generation', name: 'generation', component: GenerationView },
     { path: '/linker', name: 'linker', component: LinkerView },
+    { path: '/degrader', name: 'degrader', component: DegraderView },
+    { path: '/ternary', name: 'ternary', component: TernaryView },
     { path: '/md', name: 'md', component: MdView },
     { path: '/knowledge', name: 'knowledge', component: KnowledgeView },
     { path: '/ppi', name: 'ppi', component: PpiView },
