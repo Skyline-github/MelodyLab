@@ -20,6 +20,7 @@ onMounted(async () => { try { env.value = await api.environment() } catch (_) {}
     <aside class="sidebar">
       <div class="logo"><span class="mark"></span> MelodyLab</div>
       <router-link class="nav-item" to="/">🏠 门户首页</router-link>
+      <router-link class="nav-item" to="/triage">🧭 靶点立项评估</router-link>
       <router-link class="nav-item" to="/screening">🧹 分子准入筛选</router-link>
       <router-link class="nav-item" to="/docking">🎯 批量分子对接</router-link>
       <router-link class="nav-item" to="/generation">✨ 3D 分子生成</router-link>

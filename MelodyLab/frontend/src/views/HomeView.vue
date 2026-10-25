@@ -21,6 +21,7 @@ async function refresh() {
 }
 
 const steps = [
+  { title: '靶点立项评估', desc: '立项五问证据筛查 · 9 大公开数据库 · 红/黄/绿风险信号', to: '/triage' },
   { title: '分子准入筛选', desc: '标准化 · Ro5/QED/SA · PAINS 警报 · 多样性选择', to: '/screening' },
   { title: '批量分子对接', desc: 'GPU 优先引擎 · 口袋检测 · 断点续跑', to: '/docking' },
   { title: '3D 分子生成', desc: 'FlashDiff 扩散模型口袋内从头生成', to: '/generation' },

@@ -66,6 +66,14 @@ export const api = {
   // 逆合成
   retroPlan: (form) => request('/api/retro/plan', { method: 'POST', body: form }),
 
+  // 靶点立项评估
+  triageAvailability: () => request('/api/triage/availability'),
+  triageAssess: (form) => request('/api/triage/assess', { method: 'POST', body: form }),
+  triageJob: (id) => request(`/api/triage/jobs/${id}`),
+  triageResume: (id) => request(`/api/triage/jobs/${id}/resume`, { method: 'POST' }),
+  triageReports: () => request('/api/triage/reports'),
+  triageReport: (id) => request(`/api/triage/reports/${id}`),
+
   // 设置
   getSettings: () => request('/api/settings'),
   setDataRoot: (payload) => request('/api/settings/data-root', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }),

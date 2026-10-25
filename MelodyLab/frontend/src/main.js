@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'
 import HomeView from './views/HomeView.vue'
+import TriageView from './views/TriageView.vue'
 import ScreeningView from './views/ScreeningView.vue'
 import DockingView from './views/DockingView.vue'
 import GenerationView from './views/GenerationView.vue'
@@ -19,6 +20,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
+    { path: '/triage', name: 'triage', component: TriageView },
     { path: '/screening', name: 'screening', component: ScreeningView },
     { path: '/docking', name: 'docking', component: DockingView },
     { path: '/generation', name: 'generation', component: GenerationView },

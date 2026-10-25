@@ -1,0 +1,32 @@
+# 评分规则配置：阈值可按需要调整
+# 状态：green（良好）/ yellow（需注意）/ red（危险信号/一票否决）/ unknown（信息不足）
+#
+# 立项五问的核心理念：五个维度是乘法关系——
+# 立项阶段真正要找的不是"哪个维度得分最高"，而是"哪个维度会一票否决"。
+
+target:
+  # 靶点-疾病关联（Open Targets 整合分数，0~1）
+  association_strong: 0.5      # >= 此值 → green
+  association_weak: 0.2        # <  此值 → red（关联证据薄弱）
+  # 人类遗传学证据（genetic_association 分型分数）
+  genetic_strong: 0.1          # >= 此值 → green
+  # 遗传学证据为 0 时 → unknown（创新靶点缺人体数据不能直接判死刑）
+
+tissue:
+  # HPA 组织表达数据
+  cns_tissue_keywords: ["brain", "cortex", "cerebellum", "hippocampus",
+                        "basal ganglia", "amygdala", "spinal cord"]
+  # 靶点仅在中枢神经系统高表达 → yellow（分子递送受限，决定分子类型）
+
+safety:
+  # LOF 约束 z 分数（gnomAD 经 Open Targets，越高越受约束）
+  lof_z_strong: 3.09           # >= 此值 → red（经典高约束阈值，天然 LOF 可能有严重表型）
+  lof_z_moderate: 1.5          # >= 此值 → yellow
+  # Open Targets safety liabilities 数量
+  liabilities_red: 5           # >= 此值 → red
+  liabilities_yellow: 1        # >= 此值 → yellow
+
+commercial:
+  # ClinicalTrials.gov 靶点相关试验数
+  trials_crowded: 50           # >  此值 → yellow（赛道拥挤，差异化空间存疑）
+  trials_empty: 0              # <= 此值 → yellow（无人推进：空白或坑，需拆解不确定性）
