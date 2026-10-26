@@ -10,13 +10,14 @@ const name = ref(''), smilesText = ref(''), defaultE3 = ref(''), seeds = ref(2)
 const job = ref(null), error = ref(''), busy = ref(false), busyExample = ref(false)
 const report = ref(null), archive = ref([])
 const viewCid = ref(''), viewerLoading = ref(false)
-let timer
+const mdJob = ref(null), mdBusyCid = ref('')
+let timer, mdTimer
 
 onMounted(async () => {
   try { avail.value = await api.ternaryAvailability() } catch (_) {}
   refreshArchive()
 })
-onUnmounted(() => clearInterval(timer))
+onUnmounted(() => { clearInterval(timer); clearInterval(mdTimer) })
 
 function refreshArchive() {
   api.ternaryReports().then(a => archive.value = a).catch(() => {})
@@ -67,10 +68,36 @@ function poll() {
 async function loadReport(rid) {
   report.value = null
   viewCid.value = ''
+  mdJob.value = null
   try {
     report.value = await api.ternaryReport(rid)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (e) { error.value = e.message }
+}
+
+function launchMd(row) {
+  error.value = ''
+  mdBusyCid.value = row.compound_id
+  const fd = new FormData()
+  fd.append('ternary_report_id', report.value.id)
+  fd.append('ternary_cid', row.compound_id)
+  fd.append('total_ns', '1')
+  fd.append('test_ns', '1')
+  fd.append('npt_ns', '1')
+  fd.append('rmsd_threshold', '0.4')
+  api.mdJob(fd).then(res => {
+    mdJob.value = res
+    clearInterval(mdTimer)
+    mdTimer = setInterval(async () => {
+      try {
+        mdJob.value = await api.mdJob(res.id)
+        if (['completed', 'failed', 'stopped'].includes(mdJob.value.status)) {
+          clearInterval(mdTimer)
+          mdBusyCid.value = ''
+        }
+      } catch (_) {}
+    }, 5000)
+  }).catch(e => { error.value = e.message }).finally(() => { mdBusyCid.value = '' })
 }
 
 async function show3d(row) {
@@ -153,6 +180,13 @@ async function show3d(row) {
     <JobCard :job="job" @refresh="job = null" />
   </div>
 
+  <div v-if="mdJob" style="margin-top:14px">
+    <JobCard :job="mdJob" @refresh="mdJob = null" />
+    <div class="muted" style="font-size:12.5px; margin-top:4px">
+      三元复合物 MD 在「🌀 分子动力学」页可查看完整分析（含三体接触曲线：LIG-POI / LIG-E3 / POI-E3）。
+    </div>
+  </div>
+
   <!-- ============ 报告 ============ -->
   <template v-if="report">
     <div class="card" style="margin-top:14px">
@@ -184,7 +218,9 @@ async function show3d(row) {
             <td class="muted" style="font-size:12px">{{ r.prep.mcs_poi }}/{{ r.prep.mcs_e3 }} atm ·
               {{ r.prep.poi_rmsd }}/{{ r.prep.e3_rmsd }} Å · {{ r.prep.lig_kind }}</td>
             <td class="muted" style="font-size:12px; max-width:220px">{{ r.prep.prep_warning || '—' }}</td>
-            <td><button class="btn ghost sm" @click="show3d(r)">🔬 3D 查看</button></td>
+            <td><button class="btn ghost sm" @click="show3d(r)">🔬 3D 查看</button>
+              <button class="btn ghost sm" :disabled="mdBusyCid === r.compound_id" title="对该三元复合物跑 1 ns 动力学并分析三体接触"
+                      @click="launchMd(r)">{{ mdBusyCid === r.compound_id ? '启动中…' : '🌀 MD 验证' }}</button></td>
           </template>
         </tr>
       </table>

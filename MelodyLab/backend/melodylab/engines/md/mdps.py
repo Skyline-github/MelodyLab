@@ -34,10 +34,20 @@ def write_mdp(path, stage: str, *, nsteps: int = 0, seed: int = 42, ref_t: float
                                                 if k not in ("constraints", "constraint-algorithm",
                                                              "lincs-iter", "lincs-order")}})
         return
-    if stage in ("em", "em2"):
+    if stage in ("em", "em2", "em_fire"):
         # 最小化阶段不用约束（CG 遇到约束失败会直接报错；无约束让 H 自由松弛）
         pm = {k: v for k, v in BASE_PM.items()
-              if k not in ("constraints", "constraint-algorithm", "lincs-iter", "lincs-order")}
+              if k not in ("constraints", "constraint-algorithm",
+                           "lincs-iter", "lincs-order")}
+        if stage == "em_fire":
+            # 高受力起始松弛（DeepTernary 姿态常带原子级碰撞，steep 默认步长在
+            # inf 力下 15 步即"收敛"无法松弛）。本 Windows GROMACS 2020.6 构建
+            # 无 fire 积分器，改用极小步长 steep 分两段：先 0.0005 nm 微步走出
+            # 碰撞区，正常 em 再接力精修。
+            _write(path, stage, {"integrator": "steep", "emtol": 500.0,
+                                 "emstep": 0.0005, "nsteps": 50000,
+                                 "nstlist": 10, "nstenergy": 500, "nstlog": 500, **pm})
+            return
         _write(path, stage, {"integrator": "steep" if stage == "em" else "cg",
                              "emtol": 2000.0 if stage == "em" else 500.0,
                              "emstep": 0.01, "nsteps": 50000,

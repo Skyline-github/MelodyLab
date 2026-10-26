@@ -62,10 +62,15 @@ RESIDUE_ATOMS = {
 
 
 def repair_protein(pdb_in: Path, pdb_out: Path) -> dict:
-    """修蛋白：剔除骨架或侧链不完整的标准残基，链内断裂处插 TER（pdb2gmx 按段补端基）。
+    """修蛋白：剔除骨架或侧链不完整的标准残基；按空间连续性分段并插 TER。
 
-    另按空间连续性分段：相邻残基 CA 距离 > 1.5 nm（晶体伪影/离群片段）视为断裂，
-    每条链只保留残基最多的主片段——离群片段会让门控 RMSD 永远对不上参考。
+    分段判据（晶体重编号常见：编号跳号但残基空间键连，如 galectin-3C 5E89
+    链 A 的 62-202 缺 77/142-143 等）：
+    - 相邻残基 CA 距离 ≤ 5.0 Å → 键连（即使编号跳号也不插 TER，pdb2gmx
+      按 PDB 顺序成链）；
+    - CA 距离 > 5.0 Å（肽键 CA-CA ≈ 3.8 Å 的两倍以上）→ 真实断裂，插 TER；
+    - < 3 残基的碎片剔除（离散无序环残基，pdb2gmx 单独成链会因端基报错，
+      且 NVT 中易飞散导致门控 RMSD 失真）。
     """
     residues: dict[tuple, list[str]] = {}
     order: list[tuple] = []
@@ -98,29 +103,38 @@ def repair_protein(pdb_in: Path, pdb_out: Path) -> dict:
                 continue
         complete.append((key, lines, ca_coord(lines)))
 
-    # 按链分段：相邻残基 CA 距离 > 15 Å（=1.5 nm，晶体伪影/离群片段）视为断裂。
-    # 注意 PDB 坐标单位是埃（Å），不是 nm。
+    # 按链分段：真实断裂（CA > 5 Å）或换链开新段；编号跳号但空间键连不切
     frags: dict[str, list[list[tuple]]] = {}
     prev = None  # (key, ca)
     for key, lines, ca in complete:
         ch = key[0]
-        if prev is None or prev[0][0] != ch:
+        new_frag = prev is None or prev[0][0] != ch
+        if not new_frag:
+            d2 = None
+            if prev[1] is not None and ca is not None:
+                d2 = sum((a - b) ** 2 for a, b in zip(prev[1], ca))
+            if d2 is None or d2 > 5.0 ** 2:  # 坐标缺失或超阈值都按断裂处理
+                new_frag = True
+        if new_frag:
             frags.setdefault(ch, []).append([])
-        else:
-            far = (prev[1] is not None and ca is not None
-                   and sum((a - b) ** 2 for a, b in zip(prev[1], ca)) > 15.0 ** 2)
-            if far:
-                frags[ch].append([])
         frags[ch][-1].append(key)
         prev = (key, ca)
 
     kept_keys: set[tuple] = set()
+    frag_starts: set[tuple] = set()
     dropped_frags = []
     for ch, fl in frags.items():
         best = max(fl, key=len)
-        kept_keys.update(best)
+        if len(best) >= 3:
+            for f in fl:
+                if len(f) >= 3:
+                    kept_keys.update(f)
+                    frag_starts.add(f[0])
+        else:
+            kept_keys.update(best)  # 整链都只剩碎片时保最长，维持旧行为
+            frag_starts.add(best[0])
         for f in fl:
-            if f is not best:
+            if f[0] not in kept_keys:
                 dropped_frags.append(f"链{ch} {f[0][1]}-{f[-1][1]}（{len(f)} 残基）")
 
     out: list[str] = []
@@ -128,8 +142,8 @@ def repair_protein(pdb_in: Path, pdb_out: Path) -> dict:
     for key, lines, _ in complete:
         if key not in kept_keys:
             continue
-        if prev_key is not None and prev_key[0] == key[0] and key[1] != prev_key[1] + 1:
-            out.append("TER")
+        if prev_key is not None and prev_key[0] == key[0] and key in frag_starts:
+            out.append("TER")  # 同链内真实断裂处（键连的编号跳号不插）
         out.extend(lines)
         prev_key = key
     out.append("TER")

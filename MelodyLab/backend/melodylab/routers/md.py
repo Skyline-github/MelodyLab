@@ -53,9 +53,12 @@ def create_md_job(
     seed: int = Form(42),
     use_gpu: bool = Form(True),
     ref_t: float = Form(300.0),
+    ternary_report_id: str = Form(""),
+    ternary_cid: str = Form(""),
 ):
     if not availability()["available"]:
         raise HTTPException(400, "GROMACS 不可用：请先运行 scripts/setup_assets.py --with-gromacs")
+    is_ternary = bool(ternary_report_id.strip() and ternary_cid.strip())
     params = {
         "run_id": run_id or None, "task_id": task_id or None,
         "chains": chains or None,
@@ -64,16 +67,19 @@ def create_md_job(
         "ligand_charge": ligand_charge, "salt_molar": salt_molar,
         "rmsd_threshold": rmsd_threshold, "seed": seed, "use_gpu": use_gpu,
         "ref_t": ref_t,
+        "ternary_report_id": ternary_report_id or None,
+        "ternary_cid": ternary_cid or None,
     }
-    if not (run_id and task_id) and protein_file is None:
-        raise HTTPException(400, "请引用对接任务（run_id+task_id）或直传 protein_file")
-    record = manager.create("md", "分子动力学验证", params)
+    if not (run_id and task_id) and protein_file is None and not is_ternary:
+        raise HTTPException(400, "请引用对接任务（run_id+task_id）、直传 protein_file，或引用三元复合物报告")
+    record = manager.create(
+        "md", f"三元复合物 MD: {ternary_cid.strip()}" if is_ternary else "分子动力学验证", params)
     job_dir = manager.job_dir(record["id"])
     if protein_file is not None and protein_file.filename:
         _save_upload(protein_file, job_dir / "inputs" / protein_file.filename)
     if ligand_file is not None and ligand_file.filename:
         _save_upload(ligand_file, job_dir / "inputs" / ligand_file.filename)
-    if ligand_smiles.strip():
+    if ligand_smiles.strip() and not is_ternary:
         (job_dir / "inputs" / "ligands.txt").write_text(ligand_smiles, encoding="utf-8")
     return manager.submit(record["id"], mdp.run_md_job)
 

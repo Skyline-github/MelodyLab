@@ -50,7 +50,22 @@ def _sha256(path: Path) -> str:
 
 
 def _locate_inputs(job_dir: Path, params: dict) -> tuple[Path, Path | None, str | None]:
-    """返回 (蛋白 pdb, 配体 sdf|None, smiles|None)。优先对接任务引用，否则用上传。"""
+    """返回 (蛋白 pdb, 配体 sdf|None, smiles|None)。优先对接任务引用，否则用上传；
+    三元复合物模式引用 ternary 报告的复合物与 SMILES。"""
+    ref_id, cid = params.get("ternary_report_id"), params.get("ternary_cid")
+    if ref_id and cid:
+        from ..ternary import config as tcfg
+
+        cplx = tcfg.REPORTS_DIR / ref_id / f"complex_{cid}.pdb"
+        if not cplx.is_file():
+            raise ValueError(f"三元复合物文件不存在: {cplx}")
+        rep = json.loads((tcfg.REPORTS_DIR / ref_id / "report.json").read_text(encoding="utf-8"))
+        row = next((r for r in rep.get("rows", []) if r.get("compound_id") == cid), None)
+        if row is None:
+            raise ValueError(f"三元复合物报告中没有该分子: {cid}")
+        if not row.get("smiles"):
+            raise ValueError(f"报告行缺少 SMILES: {cid}")
+        return cplx, None, str(row["smiles"])
     inputs = job_dir / "inputs"
     run_id, task_id = params.get("run_id"), params.get("task_id")
     if run_id and task_id:
@@ -239,9 +254,31 @@ def run_md_job(record: dict, control) -> dict:
         return state["done"].get(stage) is True
 
     # ---------- 阶段 1：体系构建 ----------
+    is_ternary = bool(params.get("ternary_report_id") and params.get("ternary_cid"))
     if not done("prep"):
         control.checkpoint(progress=5, phase="prep", message="定位输入（蛋白/配体）…")
         protein, lig_sdf, lig_smiles = _locate_inputs(job_dir, params)
+        if is_ternary:
+            # 复合物 PDB：链 A/B 蛋白 + HETATM UNL。预测复合物普遍带亚埃级
+            # 穿插（模型伪影，单精度 EM 无法松弛），先几何解穿插，再构建
+            # 配体 SDF（UNL 界面坐标 + SMILES 连接性，重嵌会使配体漂离界面）
+            from .ternary import declash_complex, make_ligand_sdf_from_complex, preflight_clash
+
+            clash0 = preflight_clash(protein)
+            protein_declashed = work / "complex_declash.pdb"
+            dd = declash_complex(protein, protein_declashed)
+            _log(work, f"ternary preflight: {clash0} -> declash: {dd}")
+            if dd["min_lig_prot"] < 0.08 or dd["min_prot_prot"] < 0.08:
+                raise RuntimeError(
+                    f"三元复合物解穿插后仍有原子级接触（配体-蛋白最近 "
+                    f"{dd['min_lig_prot']:.2f} nm，蛋白-蛋白 {dd['min_prot_prot']:.2f} nm），"
+                    "无法用于动力学。请在三元复合物页面 3D 检查该姿态，或改用 "
+                    "clash 指标更低的分子。")
+            protein = protein_declashed
+            lig_sdf = work / "ligand_input.sdf"
+            sdf_info = make_ligand_sdf_from_complex(protein, lig_smiles, lig_sdf)
+            lig_smiles = None
+            _log(work, f"ternary ligand SDF: {sdf_info}")
         _log(work, f"protein={protein.name} ligand={lig_sdf.name if lig_sdf else lig_smiles}")
         info = prep.filter_protein_chains(protein, work / "protein_clean.pdb",
                                           params.get("chains"))
@@ -293,7 +330,7 @@ def run_md_job(record: dict, control) -> dict:
         run_gmx(args, cwd=work, cancel_event=control.cancel_event)
 
     def nsteps_for(stage: str) -> float:
-        if stage in ("em", "em2"):
+        if stage in ("em", "em2", "em_fire"):
             return 0  # write_mdp 内置步数
         ns = {"nvt": test_ns, "npt": npt_ns, "md": total_ns}[stage]
         return ns * 1000 / PS_PER_STEP
@@ -303,9 +340,9 @@ def run_md_job(record: dict, control) -> dict:
             return
         control.checkpoint(progress=p_lo, phase=stage,
                            message=f"{'续跑 ' if state.get('resumed_stage') and (work / f'{stage}.cpt').is_file() else ''}{stage} 模拟中…")
-        if stage != "em":
-            # em 输入 (ionized.gro) 由 solvate/genion 生成、无需整分子化；
-            # 且 ions.tpr 是加离子前拓扑不能作 -s。em.tpr 出来后的阶段统一 compact。
+        if stage not in ("em", "em_fire"):
+            # em/em_fire 输入 (ionized.gro) 由 solvate/genion 生成、无需整分子化；
+            # 且 ions.tpr 是加离子前拓扑不能作 -s。之后的阶段统一 compact。
             coord = _compact(work, "em.tpr", coord, f"{stage}_in.gro")
         _grompp(stage, coord, extra_grompp)
         _mdrun(work, stage, use_gpu, control.cancel_event, n_cpu)
@@ -316,7 +353,12 @@ def run_md_job(record: dict, control) -> dict:
         _save_state(work, state)
         control.checkpoint(progress=p_hi, phase=stage, message=f"{stage} 完成")
 
-    _run_stage("em", "ionized.gro", 26, 27)
+    em_coord = "ionized.gro"
+    if is_ternary:
+        # DeepTernary 姿态常带原子级碰撞（clash 指标高的分子尤甚），先 FIRE 松弛
+        _run_stage("em_fire", "ionized.gro", 24, 25)
+        em_coord = "em_fire.gro"
+    _run_stage("em", em_coord, 26, 27)
     rigid = state.get("ligand_mode", "rigid") == "rigid"
     if not done("em2"):
         if rigid:  # 刚体模式才需要几何刷新；OpenFF 柔性键合由力场参数自洽
@@ -396,6 +438,16 @@ def run_md_job(record: dict, control) -> dict:
             report["gate"] = {"threshold_nm": rmsd_threshold,
                               "nvt_rmsd_tail_avg": state.get("gate_rmsd"),
                               "passed": True}
+            if is_ternary:
+                from .ternary import ternary_contacts
+
+                contacts = ternary_contacts(work, "md.tpr", "md.xtc")
+                if contacts:
+                    report["ternary_contacts"] = contacts
+                    a_dir = outputs / "analysis"
+                    a_dir.mkdir(parents=True, exist_ok=True)
+                    for png in work.glob("contact_*.png"):
+                        png.replace(a_dir / png.name)
         else:
             # 烟雾判定模式：只用 nvt_lo 短轨迹做骨架/配体 RMSD
             report = _smoke_analysis(work)

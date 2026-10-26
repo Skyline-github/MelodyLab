@@ -22,6 +22,7 @@
 | 三元复合物预测 | DeepTernary：参照晶体装配（Galectin-3C × CRBN/VHL）→ 三元复合物预测 → BSA/clash 结构健康，3Dmol 交互查看 | ✅ 需资产 |
 | 亲和力预测 | PLANET pKd（挂接对接流水线） | 🟡 适配器就绪 |
 | MD 模拟 | 内置 GROMACS（GPU）、OpenFF 柔性配体、NVT 预检门控、RMSD/RMSF/Rg 分析、3Dmol 轨迹动画 | ✅ 0.2.0 |
+| 三元复合物 MD | 三元复合物预测结果一键动力学验证：界面姿态配体、几何解穿插、三体接触曲线（LIG–POI / LIG–E3 / POI–E3） | ✅ 新 |
 | 知识库检索 | ChEMBL/PubChem/RCSB/AlphaFold/ZINC/GEO | ✅ 0.2.0 |
 | PPI 网络 | STRING v12 + 图中心性/社区发现 + Cytoscape 导出 | ✅ 0.2.0 |
 | GEO 差异分析 | series matrix 解析 + t-test/BH-FDR + QC/火山图/热图 + HTML 报告 | ✅ 0.2.0 |

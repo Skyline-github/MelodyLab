@@ -49,6 +49,7 @@ export const api = {
   mdJobs: () => request('/api/md/jobs'),
   mdJob: (form) => request('/api/md/jobs', { method: 'POST', body: form }),
   mdResults: (id) => request(`/api/md/jobs/${id}/results`),
+  mdResume: (id) => request(`/api/md/jobs/${id}/resume`, { method: 'POST' }),
   mdTrajectoryPreview: (id) => `${BASE}/api/md/jobs/${id}/trajectory-preview`,
 
   // 知识库
