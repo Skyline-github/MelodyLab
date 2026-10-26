@@ -21,6 +21,16 @@ def ternary_availability():
     return availability()
 
 
+@router.get("/example")
+def ternary_example():
+    """内置示例：合成演示分子（TD2 + PEG + 泊马度胺架构，公开来源，非任何实研系列）。"""
+    if not cfg.EXAMPLE_FILE.is_file():
+        raise HTTPException(404, "示例文件缺失")
+    text = cfg.EXAMPLE_FILE.read_text(encoding="utf-8").strip()
+    return {"name": "合成演示分子 SYN-01（Galectin-3 × CRBN 架构示例）",
+            "n": 1, "text": text}
+
+
 @router.post("/predict")
 def ternary_predict(
     name: str = Form(""),

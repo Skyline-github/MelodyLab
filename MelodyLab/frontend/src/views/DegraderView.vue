@@ -183,7 +183,7 @@ function topId(row) { return row.rank_consensus <= 5.01 && row.status === 'ok' }
     </label>
     <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
       <button class="btn" :disabled="busy" @click="submit">{{ busy ? '评估中…' : '开始排序' }}</button>
-      <button class="btn ghost" :disabled="busyExample" @click="loadExample">{{ busyExample ? '载入中…' : '📋 载入示例（28 个 Galectin-3 PROTAC）' }}</button>
+      <button class="btn ghost" :disabled="busyExample" @click="loadExample">{{ busyExample ? '载入中…' : '📋 载入示例（PROTAC-DB 公开分子）' }}</button>
       <span class="muted" style="font-size:12.5px">首次运行需先训练模型（约 3–5 分钟），之后每次排序秒级完成</span>
     </div>
   </div>

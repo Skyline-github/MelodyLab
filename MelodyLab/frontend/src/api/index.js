@@ -87,6 +87,7 @@ export const api = {
 
   // 三元复合物预测
   ternaryAvailability: () => request('/api/ternary/availability'),
+  ternaryExample: () => request('/api/ternary/example'),
   ternaryPredict: (form) => request('/api/ternary/predict', { method: 'POST', body: form }),
   ternaryJob: (id) => request(`/api/ternary/jobs/${id}`),
   ternaryResume: (id) => request(`/api/ternary/jobs/${id}/resume`, { method: 'POST' }),

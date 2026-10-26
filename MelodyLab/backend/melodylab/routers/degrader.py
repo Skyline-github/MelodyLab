@@ -23,18 +23,14 @@ def degrader_availability():
 
 @router.get("/example")
 def degrader_example():
-    """内置示例：28 个 Galectin-3 PROTAC（Test_009 研究项目同款查询集）。
-
-    返回可直接粘入输入框的 'ID SMILES' 文本，前端无需解析 CSV。
-    """
-    from ..engines.degrader.features import parse_query_csv
-
+    """内置示例：PROTAC-DB 已发表 PROTAC（公开数据，含实测 DC50 可对照）。"""
     if not cfg.EXAMPLE_FILE.is_file():
         raise HTTPException(404, "示例文件缺失")
+    from ..engines.degrader.features import parse_query_csv
+
     items = parse_query_csv(cfg.EXAMPLE_FILE)
     text = "\n".join(f"{it['compound_id']} {it['smiles']}" for it in items)
-    return {"name": "Galectin-3 PROTACs（28 个，Test_009 研究项目查询集）",
-            "n": len(items), "text": text}
+    return {"name": "PROTAC-DB 公开分子示例", "n": len(items), "text": text}
 
 
 @router.post("/rank")

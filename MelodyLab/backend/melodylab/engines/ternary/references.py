@@ -1,7 +1,6 @@
 """DeepTernary 输入制备：参照晶体加载 + PROTAC→三元复合物输入装配。
 
-逐行移植自 Test_009_protac/deepternary_run/prepare_inputs.py（算法保持一致，
-print 改为返回值）。装配协议：
+装配协议（算法源自公开研究方法）：
   1. PROTAC 全分子 ETKDG 构象（seed 42）；
   2. POI 侧：MCS 对齐到 TD2 晶体姿态（5E89，galectin-3C 链 A）→ 配体进入 gal3 坐标系；
   3. E3 侧：晶体 E3 配体 MCS 对齐到 PROTAC 的 E3 warhead（排除与 POI warhead 重叠的

@@ -1,4 +1,4 @@
-"""降解剂评估引擎（PROTAC DC50 共识排序，源自 Test_009_protac 研究项目）。
+"""降解剂评估引擎（PROTAC DC50 共识排序）。
 
 打包的 PROTAC-DB 快照 + 骨架 5 折交叉验证的三族模型（MLP 集成 / ExtraTrees / HistGB）；
 模型缓存于 <data_root>/cache/degrader/，报告落 <data_root>/degrader_reports/。

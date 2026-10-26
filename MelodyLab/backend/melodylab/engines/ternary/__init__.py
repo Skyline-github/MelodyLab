@@ -1,4 +1,4 @@
-"""三元复合物预测引擎（DeepTernary 子进程封装，源自 Test_009_protac 研究项目）。
+"""三元复合物预测引擎（DeepTernary 子进程封装）。
 
 参照晶体装配（主环境 rdkit）→ DeepTernary 推理（deepternary 独立环境子进程，
 dgl 与主环境 torch 不兼容）→ BSA/clash 结构健康评估（主环境 biopython）。

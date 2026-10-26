@@ -1,6 +1,6 @@
 """降解剂评估（DC50 排序）配置：数据文件、缓存与报告目录、模型配方。
 
-方法论源自 Test_009_protac 研究项目（PROTAC-DB + 树模型/深度集成的多族共识排序，
+方法论源自 PROTAC 降解活性研究实践（PROTAC-DB + 树模型/深度集成的多族共识排序，
 conformal 不确定性区间 + 适用域检查）。定位是**排序参考工具**，不是绝对值预测器。
 """
 from __future__ import annotations
@@ -13,7 +13,7 @@ from ...config import settings as _app_settings
 # ---------------------------------------------------------------- 目录
 _DATA_DIR = Path(__file__).resolve().parent / "data"
 DB_FILE = _DATA_DIR / "protacdb_snapshot_2024-10-06.csv"
-EXAMPLE_FILE = _DATA_DIR / "example_galectin3_protacs.csv"
+EXAMPLE_FILE = _DATA_DIR / "example_public_protacs.csv"
 
 CACHE_DIR = _app_settings.data_root / "cache" / "degrader"
 REPORTS_DIR = _app_settings.data_root / "degrader_reports"

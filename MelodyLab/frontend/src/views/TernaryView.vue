@@ -26,9 +26,9 @@ function refreshArchive() {
 async function loadExample() {
   busyExample.value = true
   try {
-    const ex = await api.degraderExample()   // 复用 degrader 的 Galectin-3 示例
+    const ex = await api.ternaryExample()   // 合成演示分子（公开来源）
     smilesText.value = ex.text
-    if (!name.value.trim()) name.value = 'Galectin-3 PROTACs（示例）'
+    if (!name.value.trim()) name.value = ex.name
   } catch (e) { error.value = e.message } finally { busyExample.value = false }
 }
 
@@ -171,7 +171,7 @@ async function show3d(row) {
     </div>
     <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
       <button class="btn" :disabled="busy" @click="submit">{{ busy ? '预测中…' : '开始预测' }}</button>
-      <button class="btn ghost" :disabled="busyExample" @click="loadExample">{{ busyExample ? '载入中…' : '📋 载入示例（28 个 Galectin-3 PROTAC）' }}</button>
+      <button class="btn ghost" :disabled="busyExample" @click="loadExample">{{ busyExample ? '载入中…' : '📋 载入示例（合成演示分子 SYN-01）' }}</button>
       <span class="muted" style="font-size:12.5px">单分子约 20–40 秒（制备 + CPU 推理）；首个任务需加载模型</span>
     </div>
   </div>

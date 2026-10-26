@@ -1,6 +1,6 @@
 """三元复合物预测（DeepTernary）配置：vendor 路径、解释器解析、参照与报告目录。
 
-协议源自 Test_009_protac 研究项目（galectin-3 POI + CRBN/VHL 参照晶体装配 →
+协议源自 PROTAC 三元复合物研究实践（POI + CRBN/VHL 参照晶体装配 →
 DeepTernary 推理 → BSA/clash 结构健康评估）。DeepTernary 依赖 dgl，与主环境
 torch 版本不兼容，一律以**子进程**调用独立 conda 环境执行推理。
 """
@@ -14,6 +14,7 @@ from ...config import settings as _app_settings
 # ---------------------------------------------------------------- 目录
 _DATA_DIR = Path(__file__).resolve().parent / "data"
 REFERENCES_DIR = _DATA_DIR / "references"
+EXAMPLE_FILE = _DATA_DIR / "example_ga3_synthetic.txt"
 
 CACHE_DIR = _app_settings.data_root / "cache" / "ternary"
 REPORTS_DIR = _app_settings.data_root / "ternary_reports"
@@ -69,10 +70,10 @@ E3_REF = {
             "protein_chains": ["C"], "ideal": "3JF_ideal.sdf", "min_anchor": 22.0},
 }
 
-SEED = 42                # 构象/采样随机种子（与研究项目一致）
-DEFAULT_SEEDS = 2        # DeepTernary 推理 seed 数（研究项目用 4；2 兼顾速度）
+SEED = 42                # 构象/采样随机种子
+DEFAULT_SEEDS = 2        # DeepTernary 推理 seed 数（研究常用 4；2 兼顾速度）
 MAX_QUERY = 100          # 单次任务分子数上限（制备+推理较重）
 MIN_POI_MCS = 8          # MCS 原子数下限（低于则该分子跳过）
 COMPLEX_CHAINS = ("A", "B")   # 预测复合物中 POI/E3 的链名
 DB_NOTE = ("参照晶体：galectin-3C+TD2 (5E89)、CRBN+lenalidomide (4CI2)、"
-           "VHL+VH032 (4W9H)；协议移植自 Test_009_protac 研究项目")
+           "VHL+VH032 (4W9H)；装配协议源自公开研究方法")

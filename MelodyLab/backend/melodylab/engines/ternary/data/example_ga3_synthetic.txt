@@ -1,0 +1,1 @@
+SYN-01 O=C1CCC(N2C(=O)c3cccc(NC(=O)CCOCCOCCNC(=O)OC[C@H]4O[C@@H](S[C@@H]5O[C@H](CO)[C@H](O)[C@H](n6cc(-c7cccc(F)c7)nn6)[C@H]5O)[C@H](O)[C@@H](n5cc(-c6cccc(F)c6)nn5)[C@H]4O)c3C2=O)C(=O)N1 CRBN
