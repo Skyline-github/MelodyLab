@@ -14,6 +14,7 @@ import KnowledgeView from './views/KnowledgeView.vue'
 import PpiView from './views/PpiView.vue'
 import GeoView from './views/GeoView.vue'
 import RetroView from './views/RetroView.vue'
+import PatentSarView from './views/PatentSarView.vue'
 import SettingsView from './views/SettingsView.vue'
 import JobsView from './views/JobsView.vue'
 import './styles.css'
@@ -34,6 +35,7 @@ const router = createRouter({
     { path: '/ppi', name: 'ppi', component: PpiView },
     { path: '/geo', name: 'geo', component: GeoView },
     { path: '/retro', name: 'retro', component: RetroView },
+    { path: '/patentsar', name: 'patentsar', component: PatentSarView },
     { path: '/settings', name: 'settings', component: SettingsView },
     { path: '/jobs', name: 'jobs', component: JobsView },
   ],

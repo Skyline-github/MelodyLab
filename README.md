@@ -27,6 +27,7 @@
 | PPI 网络 | STRING v12 + 图中心性/社区发现 + Cytoscape 导出 | ✅ 0.2.0 |
 | GEO 差异分析 | series matrix 解析 + t-test/BH-FDR + QC/火山图/热图 + HTML 报告 | ✅ 0.2.0 |
 | 逆合成规划 | BRICS+RECAP 混合路线 + 递归分层 | ✅ 0.2.0 |
+| 专利 SAR 挖掘 | 专利 PDF（文本层/扫描件）→ 结构+活性数据集（DECIMER OCR、m/z 交叉校验、成对异构体消歧、Markush R 表枚举）→ RGA/3D-QSAR → 带引用校验的叙事 SAR 总结（LLM 可选，无 key 降级 digest） | ✅ 新 |
 
 ## 目录结构
 
@@ -35,7 +36,7 @@
 ├── MelodyLab/                # 项目主体
 │   ├── backend/melodylab/    #   FastAPI 后端
 │   │   ├── core/jobs.py      #     任务中心（job.json 断点恢复）
-│   │   ├── engines/          #     引擎插件层（triage/screening/docking/generation/linker/affinity/md/knowledge/ppi/geo/retro）
+│   │   ├── engines/          #     引擎插件层（triage/screening/docking/generation/linker/affinity/md/knowledge/ppi/geo/retro/patentsar）
 │   │   └── routers/          #     API 路由
 │   ├── frontend/             #   Vue3 + Vite 前端（npm run build 后 dist 由后端托管）
 │   ├── assets/               #   引擎二进制与模型权重（setup_assets.py 本地收编，不入库）

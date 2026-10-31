@@ -33,6 +33,7 @@ onMounted(async () => { try { env.value = await api.environment() } catch (_) {}
       <router-link class="nav-item" to="/ppi">🕸 蛋白互作网络</router-link>
       <router-link class="nav-item" to="/geo">📈 GEO 分析</router-link>
       <router-link class="nav-item" to="/retro">🧪 逆合成规划</router-link>
+      <router-link class="nav-item" to="/patentsar">📑 专利 SAR 挖掘</router-link>
       <router-link class="nav-item" to="/settings">⚙ 设置</router-link>
       <router-link class="nav-item" to="/jobs">📋 任务中心</router-link>
       <div class="side-footer">

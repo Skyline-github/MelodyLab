@@ -1,0 +1,8 @@
+{
+  "core_template": "{r1}NC(=O)c1ccc2{r2}ncc2c1",
+  "positions": {
+    "r1": {"Me": "C", "Et": "CC", "Ph": "c1ccccc1", "cPr": "C1CC1"},
+    "r2": {"H": "[nH]", "Me": "[n](C)"}
+  },
+  "note": "fixture config matching data/fixture_patent_hard.pdf p5 R-table; each {rN} slot is substituted verbatim with the position's SMILES snippet"
+}

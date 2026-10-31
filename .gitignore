@@ -9,6 +9,9 @@ MelodyLab/assets/
 # ---- 内部开发文档（按用户要求不入库）----
 MelodyLab/docs/
 
+# ---- 本地模型权重缓存（DECIMER/easyocr，运行时经 PYSTOW_HOME/显式路径自动落这里）----
+MelodyLab/.model_cache/
+
 # ---- 本机配置 ----
 MelodyLab/data_root.txt
 

@@ -1,0 +1,122 @@
+[
+  {
+    "example_no": "1",
+    "kind": "example",
+    "canonical_smiles": "CCNC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "12",
+    "emax_amy3r": "88",
+    "ec50_ctr": "1800",
+    "emax_ctr": "55",
+    "lcms_mz": 190.1
+  },
+  {
+    "example_no": "2",
+    "kind": "example",
+    "canonical_smiles": "CCONC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "35",
+    "emax_amy3r": "81",
+    "ec50_ctr": "950",
+    "emax_ctr": "61",
+    "lcms_mz": 206.09
+  },
+  {
+    "example_no": "3",
+    "kind": "example",
+    "canonical_smiles": "CCCONC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "8",
+    "emax_amy3r": "92",
+    "ec50_ctr": "2400",
+    "emax_ctr": "48",
+    "lcms_mz": 220.11
+  },
+  {
+    "example_no": "4",
+    "kind": "example",
+    "canonical_smiles": "CCCNC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "140",
+    "emax_amy3r": "63",
+    "ec50_ctr": "4100",
+    "emax_ctr": "33",
+    "lcms_mz": 204.11
+  },
+  {
+    "example_no": "9a",
+    "kind": "example",
+    "canonical_smiles": "CC[C@H](C)NC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "45",
+    "emax_amy3r": "84",
+    "ec50_ctr": "1500",
+    "emax_ctr": "58",
+    "lcms_mz": 218.13
+  },
+  {
+    "example_no": "9b",
+    "kind": "example",
+    "canonical_smiles": "CC[C@@H](C)NC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "130",
+    "emax_amy3r": "66",
+    "ec50_ctr": "5200",
+    "emax_ctr": "31",
+    "lcms_mz": 218.13
+  },
+  {
+    "example_no": "10",
+    "kind": "example",
+    "canonical_smiles": "C[C@H](O)[C@@H](C)NC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "18",
+    "emax_amy3r": "90",
+    "ec50_ctr": "900",
+    "emax_ctr": "64",
+    "lcms_mz": 234.12
+  },
+  {
+    "example_no": "12",
+    "kind": "markush_example",
+    "canonical_smiles": "CCNC(=O)c1ccc2[nH]ncc2c1",
+    "ec50_amy3r": "55",
+    "emax_amy3r": "78",
+    "ec50_ctr": "2100",
+    "emax_ctr": "52",
+    "lcms_mz": 190.1
+  },
+  {
+    "example_no": "13",
+    "kind": "markush_example",
+    "canonical_smiles": "Cn1ncc2cc(C(=O)Nc3ccccc3)ccc21",
+    "ec50_amy3r": "6.5",
+    "emax_amy3r": "95",
+    "ec50_ctr": "3000",
+    "emax_ctr": "45",
+    "lcms_mz": 252.11
+  },
+  {
+    "example_no": "14",
+    "kind": "markush_example",
+    "canonical_smiles": "Cn1ncc2cc(C(=O)NC3CC3)ccc21",
+    "ec50_amy3r": "15",
+    "emax_amy3r": "88",
+    "ec50_ctr": "1100",
+    "emax_ctr": "61",
+    "lcms_mz": 216.11
+  },
+  {
+    "example_no": "int-A",
+    "kind": "intermediate",
+    "canonical_smiles": null,
+    "ec50_amy3r": null,
+    "emax_amy3r": null,
+    "ec50_ctr": null,
+    "emax_ctr": null,
+    "lcms_mz": null
+  },
+  {
+    "example_no": "ref",
+    "kind": "reference",
+    "canonical_smiles": "CCNC(=O)c1ccc2cn[nH]c2c1",
+    "ec50_amy3r": "B",
+    "emax_amy3r": "72",
+    "ec50_ctr": "D",
+    "emax_ctr": "40",
+    "lcms_mz": 190.1
+  }
+]

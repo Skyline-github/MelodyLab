@@ -85,6 +85,14 @@ export const api = {
   degraderReports: () => request('/api/degrader/reports'),
   degraderReport: (id) => request(`/api/degrader/reports/${id}`),
 
+  // 专利 SAR 挖掘
+  patentsarAvailability: () => request('/api/patentsar/availability'),
+  patentsarExample: () => request('/api/patentsar/example'),
+  patentsarMine: (form) => request('/api/patentsar/mine', { method: 'POST', body: form }),
+  patentsarJob: (id) => request(`/api/patentsar/jobs/${id}`),
+  patentsarResume: (id) => request(`/api/patentsar/jobs/${id}/resume`, { method: 'POST' }),
+  patentsarSelftest: () => request('/api/patentsar/selftest', { method: 'POST' }),
+
   // 三元复合物预测
   ternaryAvailability: () => request('/api/ternary/availability'),
   ternaryExample: () => request('/api/ternary/example'),
